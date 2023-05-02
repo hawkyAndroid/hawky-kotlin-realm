@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">RealmSimple</string>
+    <string name="nameFormat">%s---%s---%s</string>
+
 </resources>
