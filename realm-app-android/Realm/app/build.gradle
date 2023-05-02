@@ -1,43 +1,112 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+    id 'realm-android'
 }
 
 android {
-    namespace 'com.hwaky.realm'
-    compileSdk 33
+    // namespace：注意这个不是打包的包名，而是一些自动生成的类会引用到(import package)
+    namespace 'com.hawky.realm'
+    compileSdk rootProject.ext.compileSdkVersion
+
+    // 配置签名
+    signingConfigs {
+        release {
+            storeFile file('../keystore/hawky.jks')
+            storePassword "hawky2023!"
+            keyAlias "hawky"
+            keyPassword "hawky2023!"
+        }
+    }
 
     defaultConfig {
-        applicationId "com.hwaky.realm"
+        applicationId "com.hawky.realm"
         minSdk 24
         targetSdk 33
-        versionCode 1
-        versionName "1.0"
-
+        multiDexEnabled true
+        flavorDimensions "brand"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    // 配置编译类型
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true// release版本使用混淆
+            buildConfigField "boolean", "IS_DEBUGENV", 'false'
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+
+        debug {
+            minifyEnabled false// debug版本不使用混淆
+            buildConfigField "boolean", "IS_DEBUGENV", 'true'
+        }
+
+        // 对打包的 apk 重命名
+        applicationVariants.all {
+            variant ->
+                variant.outputs.each {
+                    output ->
+                        def formattedDate = new Date().format('yyyyMMdd-HHmm')
+                        def newName = output.outputFile.name
+                        newName = newName.replace("-release", "-release-" + formattedDate)
+                        newName = newName.replace("-debug", "-debug-" + formattedDate)
+                        output.outputFileName = newName
+                }
+        }
     }
+
+    // 多渠道打包（applicationIdSuffix 改包名）
+    // 若直接 build 打包，则会默认使用最后一个Flavor配置，apk生成路径：build/outputs/apk/huawei/
+    // 若使用 签名 打包（如选择huawei），则apk生成路径 /app/huawei
+    productFlavors {
+        xiaomi {
+            dimension "brand"
+            applicationIdSuffix ".xiaomi"
+            versionCode 1
+            versionName "1.0"
+            buildConfigField 'String', 'brand_id', '"xiaomi"'
+        }
+
+        huawei {
+            dimension "brand"
+            applicationIdSuffix ".huawei"
+            versionCode 1
+            versionName "1.0"
+            buildConfigField "String", "brand_id", '"huawei"'
+        }
+    }
+
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
+
+    /*lintOptions {
+        abortOnError false
+        checkReleaseBuilds true
+    }*/
+
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '17'
+    }
+
+    // 开启 dataBinding
+    dataBinding {
+        enabled = true
     }
 }
 
 dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation 'androidx.core:core-ktx:1.8.0'
+    implementation "androidx.core:core-ktx:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation 'com.google.android.material:material:1.5.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
+    implementation 'com.android.support:multidex:1.0.3'
+    implementation project(path: ':hawkybase')
+    implementation project(path: ':hawkysdk-realm')
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'

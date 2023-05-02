@@ -1,16 +1,34 @@
+//  New Version：buildscript --> pluginManagement 插件管理
 pluginManagement {
-    repositories {
+    repositories {// 下载 Gradle 插件 的依赖仓库
         google()
         mavenCentral()
         gradlePluginPortal()
     }
 }
+
+// New Version： allprojects --> dependencyResolutionManagement 依赖项解析管理
 dependencyResolutionManagement {
+    /**
+     * 设置存储库模式（原 allprojects 是没有这一项的）：
+     * PREFER_PROJECT：解析依赖库时, 优先使用本地仓库
+     * FAIL_ON_PROJECT_REPOS：解析依赖库时, 强行使用远程仓库
+     */
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         google()
         mavenCentral()
     }
 }
-rootProject.name = "RealmSimple"
+
+// 项目工程的名字，可不写
+//rootProject.name = "Realm"
+
+// include modules
 include ':app'
+include ':hawkybase'
+include ':hawkysdk-realm'
+
+// project paths
+project(':hawkybase').projectDir = new File(settingsDir, '../../hawky-base-android/hawkybase')
+project(':hawkysdk-realm').projectDir = new File(settingsDir, '../../hawky-sdk-android/hawkysdk-realm')
