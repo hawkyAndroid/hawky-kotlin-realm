@@ -21,8 +21,12 @@ plugins {
     id 'org.jetbrains.kotlin.android' version "$kotlin_version" apply false
 }
 
-// 定义扩展参数，可全局配置使用
+task clean(type: Delete) {
+    // 删除所有build目录
+    delete rootProject.buildDir
+}
+
 ext {
+    hawky_key_path = 'keystore/hawky.jks'
     compileSdkVersion = 33
-    //...
 }

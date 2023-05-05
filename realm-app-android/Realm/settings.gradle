@@ -1,3 +1,4 @@
+// NOTE：Gradle 构建时，会先执行 settings.gradle 里面的内容（按顺序执行）
 //  New Version：buildscript --> pluginManagement 插件管理
 pluginManagement {
     repositories {// 下载 Gradle 插件 的依赖仓库
@@ -29,6 +30,6 @@ include ':app'
 include ':hawkybase'
 include ':hawkysdk-realm'
 
-// project paths
+// project(':project.name') paths
 project(':hawkybase').projectDir = new File(settingsDir, '../../hawky-base-android/hawkybase')
 project(':hawkysdk-realm').projectDir = new File(settingsDir, '../../hawky-sdk-android/hawkysdk-realm')
