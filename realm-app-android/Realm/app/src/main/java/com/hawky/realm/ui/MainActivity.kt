@@ -6,8 +6,10 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.hawky.hawkybase.DebugLog
+import com.hawky.hawkysdk.realm.realmdao.BookDao
 import com.hawky.hawkysdk.realm.realmdao.PersonDao
 import com.hawky.hawkysdk.realm.realmdao.RealmCallback
+import com.hawky.hawkysdk.realm.realmmodel.BookModel
 import com.hawky.hawkysdk.realm.realmmodel.PersonModel
 import com.hawky.realm.R
 import com.hawky.realm.RealmApplication
@@ -51,6 +53,14 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             })
+
+////            val book = BookModel()
+////            book.id = BookDao.getNextId()
+////            book.name = "XXX活着"
+////            book.type = 3
+//            book.price = 34.8
+//            book.publishTime = 20000101
+//            BookDao.saveBook(book)
         }
 
         fun deleteUser(view: View) {
@@ -100,8 +110,10 @@ class MainActivity : AppCompatActivity() {
                 user.email = email
                 binding.user = user
             }
-        }
 
+//            val book = BookDao.queryBook("活着")
+//            DebugLog.d("book:${book}")
+        }
     }
 
     override fun onDestroy() {
