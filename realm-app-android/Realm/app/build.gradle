@@ -127,7 +127,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.5.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
     implementation 'com.android.support:multidex:1.0.3'
-    /*// Hawky libraries as projects (for development only)
+    // Hawky libraries as projects (for development only)
     implementation project(path: ':hawkybase')
     implementation project(path: ':hawkysdk-realm')
     //*/

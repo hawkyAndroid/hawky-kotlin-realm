@@ -1,13 +1,11 @@
 package com.hawky.hawkysdk.realm
 
 import android.content.Context
-import io.realm.DynamicRealm
 import io.realm.Realm
 import io.realm.RealmConfiguration
-import io.realm.RealmMigration
 
 object HawkyRealm {
-    private const val REALM_DATABASE_VERSION: Long = 1
+    private const val REALM_DATABASE_VERSION: Long = 2
     private const val REALM_DATABASE_NAME = "hawky.realm"
 
     /**
@@ -23,7 +21,7 @@ object HawkyRealm {
             // Realm会把assets路径下的xxx.realm文件拷贝到Context.getFilesDir()默认目录中，
             // 以替换默认创建的空数据库文件。
             // .assetFile("xxx.realm")
-            .migration(userMigration) // 升级
+            .migration(HawkyMigration()) // 升级
             .encryptionKey(getRealmKey())// 加密
             .build()
 
@@ -34,14 +32,6 @@ object HawkyRealm {
         // 当然也可以不进行 setDefaultConfiguration操作，
         // 通过 Realm.getInstance(config) 也可获取 Realm 对象。
     }
-
-    /**
-     * DB 升级使用
-     */
-    private val userMigration =
-        RealmMigration { realm: DynamicRealm, oldVersion: Long, newVersion: Long ->
-            //...
-        }
 
     /**
      * NOTE：Realm 密钥必须是64个字节
